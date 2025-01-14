@@ -19,26 +19,27 @@ resource "kubernetes_namespace" "item-tracker-namespace" {
 
 resource "kubernetes_deployment" "kubernetes-bootcamp" {
   metadata {
-    name = "minikube-bootcamp"
+    name = "item-tracker"
     namespace = kubernetes_namespace.item-tracker-namespace.metadata.0.name
   }
   spec {
     replicas = 1
     selector {
       match_labels = {
-        app = "minikube-bootcamp"
+        app = "item-tracker"
       }
     }
     template {
       metadata {
         labels = {
-          app = "minikube-bootcamp"
+          app = "item-tracker"
         }
       }
       spec {
         container {
+          image_pull_policy = "IfNotPresent"
           name  = "minikube-bootcamp"
-          image = "gcr.io/k8s-minikube/kubernetes-bootcamp:v1"
+          image = "item-tracker-go:4.0"
           port {
             container_port = 80
           }
@@ -50,7 +51,7 @@ resource "kubernetes_deployment" "kubernetes-bootcamp" {
 
 resource "kubernetes_service" "kubernetes-bootcamp" {
     metadata {
-      name = "kubernetes-bootcamp"
+      name = "item-tracker"
       namespace = kubernetes_namespace.item-tracker-namespace.metadata.0.name
     }
     spec {
