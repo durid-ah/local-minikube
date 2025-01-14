@@ -17,7 +17,7 @@ resource "kubernetes_namespace" "item-tracker-namespace" {
   }
 }
 
-resource "kubernetes_deployment" "kubernetes-bootcamp" {
+resource "kubernetes_deployment" "item-tracker-deployment" {
   metadata {
     name = "item-tracker"
     namespace = kubernetes_namespace.item-tracker-namespace.metadata.0.name
@@ -38,7 +38,7 @@ resource "kubernetes_deployment" "kubernetes-bootcamp" {
       spec {
         container {
           image_pull_policy = "IfNotPresent"
-          name  = "minikube-bootcamp"
+          name  = "item-tracker"
           image = "item-tracker-go:4.0"
           port {
             container_port = 80
@@ -49,14 +49,14 @@ resource "kubernetes_deployment" "kubernetes-bootcamp" {
   }
 }
 
-resource "kubernetes_service" "kubernetes-bootcamp" {
+resource "kubernetes_service" "item-tracker-service" {
     metadata {
       name = "item-tracker"
       namespace = kubernetes_namespace.item-tracker-namespace.metadata.0.name
     }
     spec {
       selector = {
-        app = kubernetes_deployment.kubernetes-bootcamp.metadata.0.name
+        app = kubernetes_deployment.item-tracker-deployment.metadata.0.name
       }
       type = "NodePort"
       port {
